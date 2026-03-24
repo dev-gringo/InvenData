@@ -1,0 +1,71 @@
+package com.invendata.dao;
+
+import com.invendata.config.Conexion;
+import com.invendata.model.Producto;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductoDAO {
+
+    Connection con;
+    PreparedStatement ps;
+    ResultSet rs;
+
+    // 1. Método para Listar todos los productos (READ)
+    public List<Producto> listar() {
+        List<Producto> lista = new ArrayList<>();
+        String sql = "SELECT * FROM productos WHERE estado = 'ACTIVO'";
+        try {
+            con = Conexion.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Producto p = new Producto();
+                p.setId(rs.getInt("id"));
+                p.setNombre(rs.getString("nombre"));
+                p.setCategoria(rs.getString("categoria"));
+                p.setPrecio(rs.getDouble("precio"));
+                p.setStock(rs.getInt("stock"));
+                p.setStockMinimo(rs.getInt("stock_minimo"));
+                p.setEstado(rs.getString("estado"));
+                lista.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al listar productos: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    // 2. Método para Registrar un nuevo producto (CREATE)
+    public boolean registrar(Producto p) {
+        String sql = "INSERT INTO productos (nombre, categoria, precio, stock, stock_minimo, estado) VALUES (?, ?, ?, ?, ?, 'ACTIVO')";
+        try {
+            con = Conexion.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, p.getNombre());
+            ps.setString(2, p.getCategoria());
+            ps.setDouble(3, p.getPrecio());
+            ps.setInt(4, p.getStock());
+            ps.setInt(5, p.getStockMinimo());
+            
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al registrar producto: " + e.getMessage());
+            return false;
+        }
+    }
+    /*public static void main(String[] args) {
+    ProductoDAO dao = new ProductoDAO();
+    List<Producto> productos = dao.listar();
+    
+    System.out.println("--- LISTA DE PRODUCTOS EN BD ---");
+    for (Producto p : productos) {
+        System.out.println("Producto: " + p.getNombre() + " | Stock: " + p.getStock());
+    }
+}*/
+}

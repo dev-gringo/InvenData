@@ -1,0 +1,6 @@
+com\invendata\config\Conexion.class
+com\invendata\controller\ProductoServlet.class
+com\invendata\dao\ProductoDAO.class
+com\invendata\model\Producto.class
+com\invendata\model\Usuario.class
+com\invendata\model\Movimiento.class
