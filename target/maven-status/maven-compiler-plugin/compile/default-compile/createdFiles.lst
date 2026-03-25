@@ -4,3 +4,5 @@ com\invendata\dao\ProductoDAO.class
 com\invendata\model\Producto.class
 com\invendata\model\Usuario.class
 com\invendata\model\Movimiento.class
+com\invendata\dao\MovimientoDAO.class
+com\invendata\controller\MovimientoServlet.class

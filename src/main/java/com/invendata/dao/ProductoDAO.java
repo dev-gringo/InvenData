@@ -68,4 +68,27 @@ public class ProductoDAO {
         System.out.println("Producto: " + p.getNombre() + " | Stock: " + p.getStock());
     }
 }*/
+    
+    /**
+ * Consulta el stock actual de un producto específico en la base de datos.
+ * Este método es vital para la validación de seguridad antes de una salida.
+ */
+public int obtenerStock(int id) {
+    String sql = "SELECT stock FROM productos WHERE id = ?";
+    try {
+        con = Conexion.getConnection();
+        ps = con.prepareStatement(sql);
+        ps.setInt(1, id);
+        rs = ps.executeQuery();
+        
+        if (rs.next()) {
+            // Retorna el valor de la columna 'stock' de la tabla
+            return rs.getInt("stock");
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al obtener stock: " + e.getMessage());
+    }
+    // Si el producto no existe o hay error, devolvemos 0 para evitar salidas
+    return 0;
+}
 }

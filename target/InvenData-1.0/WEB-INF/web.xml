@@ -4,9 +4,17 @@
         <servlet-name>ProductoServlet</servlet-name>
         <servlet-class>com.invendata.controller.ProductoServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MovimientoServlet</servlet-name>
+        <servlet-class>com.invendata.controller.MovimientoServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProductoServlet</servlet-name>
         <url-pattern>/ProductoServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MovimientoServlet</servlet-name>
+        <url-pattern>/MovimientoServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

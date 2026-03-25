@@ -6,24 +6,29 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Clase DAO para gestionar la tabla 'movimientos' y 
+ * actualizar el stock de 'productos' en una sola transacción.
+ */
 public class MovimientoDAO {
 
     Connection con;
     PreparedStatement ps;
 
     public boolean registrar(Movimiento m) {
-        // SQL 1: Insertar el movimiento
+        // SQL 1: Insertar el rastro del movimiento
         String sqlMov = "INSERT INTO movimientos (producto_id, usuario_id, tipo, cantidad) VALUES (?, ?, ?, ?)";
-        // SQL 2: Actualizar el stock del producto (Suma si es ENTRADA, Resta si es SALIDA)
+        
+        // SQL 2: Actualizar el stock (Suma si entra, Resta si sale)
         String sqlProd = (m.getTipo().equalsIgnoreCase("ENTRADA")) 
                 ? "UPDATE productos SET stock = stock + ? WHERE id = ?" 
                 : "UPDATE productos SET stock = stock - ? WHERE id = ?";
 
         try {
             con = Conexion.getConnection();
-            con.setAutoCommit(false); // Iniciamos Transacción
+            con.setAutoCommit(false); // 🚩 INICIO DE TRANSACCIÓN: No guarda nada hasta que todo sea exitoso
 
-            // Ejecutar Registro de Movimiento
+            // 1. Registrar el movimiento
             ps = con.prepareStatement(sqlMov);
             ps.setInt(1, m.getProductoId());
             ps.setInt(2, m.getUsuarioId());
@@ -31,17 +36,21 @@ public class MovimientoDAO {
             ps.setInt(4, m.getCantidad());
             ps.executeUpdate();
 
-            // Ejecutar Actualización de Stock
+            // 2. Actualizar el stock del producto relacionado
             ps = con.prepareStatement(sqlProd);
             ps.setInt(1, m.getCantidad());
             ps.setInt(2, m.getProductoId());
             ps.executeUpdate();
 
-            con.commit(); // Si todo está bien, guardamos cambios
+            con.commit(); // ✅ TODO OK: Se guardan ambos cambios permanentemente
             return true;
         } catch (SQLException e) {
-            try { con.rollback(); } catch (SQLException ex) { } // Si hay error, deshacemos todo
-            System.err.println("Error en movimiento: " + e.getMessage());
+            try {
+                if (con != null) con.rollback(); // ❌ ERROR: Se deshace cualquier cambio parcial
+            } catch (SQLException ex) {
+                System.err.println("Error en Rollback: " + ex.getMessage());
+            }
+            System.err.println("Error en MovimientoDAO: " + e.getMessage());
             return false;
         }
     }
