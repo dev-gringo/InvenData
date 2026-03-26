@@ -55,7 +55,6 @@ public class ProductoServlet extends HttpServlet {
         request.setAttribute("productos", lista);
         request.getRequestDispatcher("productos.jsp").forward(request, response);
     }
-
     /**
      * MÉTODO POST: Se encarga de procesar las acciones que envían datos (Formularios).
      */

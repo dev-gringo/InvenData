@@ -6,65 +6,84 @@
         <title>InvenData - Gestión de Inventario</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
-    <body class="container mt-5">
+    <body>
         
-        <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0"> Panel de Inventario InvenData</h2>
-    <div>
-        <span class="me-3 text-muted">Bienvenido, <strong>${usuarioLogueado.nombreCompleto}</strong></span>
-    <a href="LoginServlet?accion=logout" class="btn btn-danger btn-sm">
-        Cerrar Sesión Segura</a> 
-    </div>
-</div>
-        
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+            <div class="container">
+                <a class="navbar-brand" href="#">📊 InvenData</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="ProductoServlet">Inventario</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="MovimientoServlet">Historial</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        <span class="navbar-text me-3 text-white">
+                            Bienvenido, <strong>${sessionScope.usuarioLogueado.nombreCompleto}</strong>
+                        </span>
+                        <a href="LoginServlet?accion=logout" class="btn btn-outline-danger btn-sm">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
-        <c:if test="${param.error == 'insuficiente'}">
-            <div class="alert alert-danger">❌ Error: Stock insuficiente para realizar la salida.</div>
-        </c:if>
-        <c:if test="${param.msj == 'exito'}">
-            <div class="alert alert-success">✅ Movimiento registrado correctamente.</div>
-        </c:if>
+        <div class="container">
+            <h2 class="mb-4">📦 Panel de Inventario</h2>
 
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalProducto">
-            + Nuevo Producto
-        </button>
+            <c:if test="${param.error == 'insuficiente'}">
+                <div class="alert alert-danger">❌ Error: Stock insuficiente para realizar la salida.</div>
+            </c:if>
+            <c:if test="${param.msj == 'exito'}">
+                <div class="alert alert-success">✅ Movimiento registrado correctamente.</div>
+            </c:if>
 
-        <table class="table table-hover table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Precio</th>
-                    <th>Stock Actual</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="p" items="${productos}">
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalProducto">
+                + Nuevo Producto
+            </button>
+
+            <table class="table table-hover table-bordered shadow-sm">
+                <thead class="table-dark">
                     <tr>
-                        <td>${p.id}</td>
-                        <td>${p.nombre}</td>
-                        <td>${p.categoria}</td>
-                        <td>$ ${p.precio}</td>
-                        <td>
-                            <span class="badge ${p.stock <= p.stockMinimo ? 'bg-danger' : 'bg-success'}">
-                                ${p.stock} (Min: ${p.stockMinimo})
-                            </span>
-                        </td>
-                        <td>${p.estado}</td>
-                        <td>
-                            <button type="button" class="btn btn-warning btn-sm" 
-                                    onclick="prepararMovimiento(${p.id}, '${p.nombre}')" 
-                                    data-bs-toggle="modal" data-bs-target="#modalMovimiento">
-                                ± Movimiento
-                            </button>
-                        </td>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Stock Actual</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <c:forEach var="p" items="${productos}">
+                        <tr>
+                            <td>${p.id}</td>
+                            <td>${p.nombre}</td>
+                            <td>${p.categoria}</td>
+                            <td>$ ${p.precio}</td>
+                            <td>
+                                <span class="badge ${p.stock <= p.stockMinimo ? 'bg-danger' : 'bg-success'}">
+                                    ${p.stock} (Min: ${p.stockMinimo})
+                                </span>
+                            </td>
+                            <td>${p.estado}</td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-sm" 
+                                        onclick="prepararMovimiento(${p.id}, '${p.nombre}')" 
+                                        data-bs-toggle="modal" data-bs-target="#modalMovimiento">
+                                    ± Movimiento
+                                </button>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
 
         <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
@@ -123,10 +142,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         
         <script>
-            /**
-             * Esta función se ejecuta al dar clic en '± Movimiento'.
-             * Pone el ID del producto en el campo oculto del modal.
-             */
             function prepararMovimiento(id, nombre) {
                 document.getElementById('idProdMov').value = id;
                 document.getElementById('tituloMov').innerText = "Movimiento para: " + nombre;
