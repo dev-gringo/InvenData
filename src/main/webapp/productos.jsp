@@ -7,7 +7,15 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body class="container mt-5">
-        <h2 class="mb-4">📦 Panel de Inventario InvenData</h2>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"> Panel de Inventario InvenData</h2>
+    <div>
+        <span class="me-3 text-muted">Bienvenido, <strong>${usuarioLogueado.nombreCompleto}</strong></span>
+        <a href="LoginServlet?accion=logout" class="btn btn-outline-danger btn-sm">Cerrar Sesión</a>
+    </div>
+</div>
+        
 
         <c:if test="${param.error == 'insuficiente'}">
             <div class="alert alert-danger">❌ Error: Stock insuficiente para realizar la salida.</div>

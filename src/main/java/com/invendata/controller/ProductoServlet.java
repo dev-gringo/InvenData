@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet(name = "ProductoServlet", urlPatterns = {"/ProductoServlet"})
 public class ProductoServlet extends HttpServlet {
@@ -16,18 +17,24 @@ public class ProductoServlet extends HttpServlet {
     ProductoDAO pdao = new ProductoDAO();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        // 1. Obtener la lista de productos desde el DAO
-        List<Producto> lista = pdao.listar();
-        
-        // 2. Guardar la lista en el "alcance" de la petición (request)
-        request.setAttribute("productos", lista);
-        
-        // 3. Enviar la información a la página JSP (La Vista)
-        request.getRequestDispatcher("productos.jsp").forward(request, response);
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    
+    // 1. Intentar obtener la sesión actual
+    HttpSession session = request.getSession(false); 
+    
+    // 2. VALIDACIÓN DE SEGURIDAD (El Candado)
+    if (session == null || session.getAttribute("usuarioLogueado") == null) {
+        // No está logueado -> Redirigir al Login con un mensaje
+        response.sendRedirect("index.jsp?error=sesion");
+        return; // Detiene la ejecución para que no cargue los productos
     }
+
+    // 3. Si pasó el filtro, entonces sí cargamos los productos
+    List<Producto> lista = pdao.listar();
+    request.setAttribute("productos", lista);
+    request.getRequestDispatcher("productos.jsp").forward(request, response);
+}
     
     @Override
 protected void doPost(HttpServletRequest request, HttpServletResponse response)

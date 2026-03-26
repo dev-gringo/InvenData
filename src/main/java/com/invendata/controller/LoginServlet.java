@@ -15,6 +15,30 @@ public class LoginServlet extends HttpServlet {
 
     UsuarioDAO udao = new UsuarioDAO();
 
+    /**
+     * MÉTODO GET: Se usa para CERRAR SESIÓN.
+     * Se activa cuando el usuario hace clic en el enlace de Logout.
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        String accion = request.getParameter("accion");
+        
+        // Si la URL es LoginServlet?accion=logout
+        if (accion != null && accion.equalsIgnoreCase("logout")) {
+            HttpSession session = request.getSession(false); // Obtiene la sesión actual
+            if (session != null) {
+                session.invalidate(); // 🔥 Elimina los datos del usuario (Cierra el candado)
+            }
+            response.sendRedirect("index.jsp"); // Manda al usuario de vuelta al inicio
+        }
+    }
+
+    /**
+     * MÉTODO POST: Se usa para ENTRAR.
+     * Recibe los datos del formulario de Login.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
