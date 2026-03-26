@@ -12,7 +12,8 @@
     <h2 class="mb-0"> Panel de Inventario InvenData</h2>
     <div>
         <span class="me-3 text-muted">Bienvenido, <strong>${usuarioLogueado.nombreCompleto}</strong></span>
-        <a href="LoginServlet?accion=logout" class="btn btn-outline-danger btn-sm">Cerrar Sesión</a>
+    <a href="LoginServlet?accion=logout" class="btn btn-danger btn-sm">
+        Cerrar Sesión Segura</a> 
     </div>
 </div>
         
