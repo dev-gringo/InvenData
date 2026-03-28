@@ -9,6 +9,41 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>InvenData - Gestión de Inventario</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        
+     <style>
+    @media print {
+        /* Esconder navbars, botones, modales y el buscador al imprimir */
+        .navbar, .btn, .modal, .row.mb-4, .row.mb-3, .alert, th:last-child, td:last-child {
+            display: none !important;
+        }
+        
+        /* Ajustar la tabla para que ocupe toda la hoja */
+        .container {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        .table {
+            width: 100% !important;
+            border: 1px solid #000 !important;
+        }
+
+        /* Añadir un título que solo se vea al imprimir */
+        .print-header {
+            display: block !important;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    }
+
+    /* Esconder el título de impresión en la pantalla normal */
+    .print-header {
+        display: none;
+    }
+    </style>
+    
     </head>
     <body>
         
@@ -39,7 +74,23 @@
 
         <div class="container">
              
-            <h2 class="mb-4">📦 Panel de Inventario</h2>
+     <div class="row align-items-center mt-4 mb-2">
+    <div class="col-md-3 no-print"></div>
+
+    <div class="col-md-6 text-center">
+        <h2 class="display-6 fw-bold mb-0">📦 Panel de Inventario</h2>
+    </div>
+
+    <div class="col-md-3 text-end no-print">
+        <button onclick="window.print();" class="btn btn-secondary shadow-sm">
+            🖨️ Imprimir Reporte
+        </button>
+    </div>
+    
+    <div class="col-12 mt-2">
+        <hr class="w-25 mx-auto">
+    </div>
+</div>
             
     <div class="row mb-4">
        <div class="col-md-4">
