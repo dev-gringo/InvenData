@@ -38,7 +38,28 @@
         </nav>
 
         <div class="container">
+             
             <h2 class="mb-4">📦 Panel de Inventario</h2>
+            
+            <div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-light border-danger shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="card-title text-muted">Productos en Alerta</h6>
+                <c:set var="contadorCritico" value="0" />
+                <c:forEach var="p" items="${productos}">
+                    <c:if test="${p.stock <= p.stockMinimo}">
+                        <c:set var="contadorCritico" value="${contadorCritico + 1}" />
+                    </c:if>
+                </c:forEach>
+                <h2 class="display-6 fw-bold ${contadorCritico > 0 ? 'text-danger' : 'text-success'}">
+                    ${contadorCritico}
+                </h2>
+                <small class="text-muted">Por debajo del stock mínimo</small>
+            </div>
+        </div>
+    </div>
+</div>
 
             <c:if test="${param.error == 'insuficiente'}">
                 <div class="alert alert-danger">❌ Error: Stock insuficiente para realizar la salida.</div>
@@ -50,6 +71,25 @@
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="prepararNuevo()">
                 + Nuevo Producto
             </button>
+                
+ <div class="row mb-3 mt-2">
+    <div class="col-md-6">
+        <form action="ProductoServlet" method="GET" class="d-flex">
+            <input type="hidden" name="accion" value="buscar">
+            <input type="text" name="txtBusqueda" class="form-control me-2" placeholder="Buscar producto por nombre...">
+            <button type="submit" class="btn btn-dark">🔍</button>
+        </form>
+    </div>
+    
+    <div class="col-md-6 text-end">
+        <a href="ProductoServlet?accion=verCriticos" class="btn btn-outline-danger">
+            ⚠️ Ver Stock Crítico
+        </a>
+        <a href="ProductoServlet" class="btn btn-outline-secondary">
+            🔄 Ver Todo
+        </a>
+    </div>
+</div>       
 
             <table class="table table-hover table-bordered shadow-sm">
                 <thead class="table-dark">

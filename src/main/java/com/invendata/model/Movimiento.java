@@ -14,8 +14,6 @@ public class Movimiento {
     private String tipo; // ENTRADA o SALIDA
     private int cantidad;
     private Timestamp fecha;
-
-    // --- NUEVOS CAMPOS PARA EL HISTORIAL ---
     private String nombreProducto; // Para mostrar el nombre en lugar del ID
     private String nombreUsuario;  // Para saber quién hizo el movimiento
 

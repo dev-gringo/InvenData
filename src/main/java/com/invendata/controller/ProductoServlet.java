@@ -20,7 +20,7 @@ public class ProductoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // 1. ANTI-CACHÉ Y SEGURIDAD
+        // 1. ANTI-CACHÉ Y SEGURIDAD (Se mantiene igual)
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         HttpSession session = request.getSession(false); 
         if (session == null || session.getAttribute("usuarioLogueado") == null) {
@@ -28,17 +28,38 @@ public class ProductoServlet extends HttpServlet {
             return;
         }
 
-        // 2. CAPTURAR ACCIÓN DE ELIMINACIÓN (Viene por URL)
+        // 2. CAPTURAR ACCIÓN
         String accion = request.getParameter("accion");
-        if (accion != null && accion.equalsIgnoreCase("eliminar")) {
-            int idEliminar = Integer.parseInt(request.getParameter("id"));
-            pdao.eliminarLogico(idEliminar); // Cambia estado a 'INACTIVO'
-            response.sendRedirect("ProductoServlet");
-            return; 
+        List<Producto> lista;
+
+        // Si no hay acción, por defecto es listar todo
+        if (accion == null) {
+            accion = "listar";
         }
 
-        // 3. LISTADO NORMAL
-        List<Producto> lista = pdao.listar();
+        switch (accion) {
+            case "eliminar":
+                int idEliminar = Integer.parseInt(request.getParameter("id"));
+                pdao.eliminarLogico(idEliminar);
+                response.sendRedirect("ProductoServlet");
+                return;
+
+            case "buscar":
+                String texto = request.getParameter("txtBusqueda");
+                lista = pdao.buscar(texto); // Usa el método que agregamos al DAO
+                break;
+
+            case "verCriticos":
+                lista = pdao.listarCriticos(); // Usa el método de stock bajo del DAO
+                break;
+
+            default:
+                lista = pdao.listar(); // Listado normal (Activos)
+                break;
+        }
+
+        // 3. DESPACHO ÚNICO
+        // Sea cual sea la lista (buscada, crítica o total), se envía al mismo JSP
         request.setAttribute("productos", lista);
         request.getRequestDispatcher("productos.jsp").forward(request, response);
     }

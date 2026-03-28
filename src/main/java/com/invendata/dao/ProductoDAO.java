@@ -133,4 +133,61 @@ public int obtenerStock(int id) {
             return false;
         }
     }
+   
+    /**
+     * Busca productos por nombre (Coincidencia parcial).
+     * Útil para encuentrarr productos rápidamente.
+     */
+    public List<Producto> buscar(String texto) {
+        List<Producto> lista = new ArrayList<>();
+        String sql = "SELECT * FROM productos WHERE nombre LIKE ? AND estado = 'ACTIVO'";
+        try {
+            con = Conexion.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, "%" + texto + "%"); // El % permite buscar "Cel" y que salga "Celular"
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Producto p = new Producto();
+                p.setId(rs.getInt("id"));
+                p.setNombre(rs.getString("nombre"));
+                p.setCategoria(rs.getString("categoria"));
+                p.setPrecio(rs.getDouble("precio"));
+                p.setStock(rs.getInt("stock"));
+                p.setStockMinimo(rs.getInt("stock_minimo"));
+                p.setEstado(rs.getString("estado"));
+                lista.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error en búsqueda: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    /**
+     * Lista solo los productos que están en alerta (stock <= stock_minimo).
+     * Cumple con el requerimiento de Validación de Stock Crítico.
+     */
+    public List<Producto> listarCriticos() {
+        List<Producto> lista = new ArrayList<>();
+        String sql = "SELECT * FROM productos WHERE stock <= stock_minimo AND estado = 'ACTIVO'";
+        try {
+            con = Conexion.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Producto p = new Producto();
+                p.setId(rs.getInt("id"));
+                p.setNombre(rs.getString("nombre"));
+                p.setCategoria(rs.getString("categoria"));
+                p.setPrecio(rs.getDouble("precio"));
+                p.setStock(rs.getInt("stock"));
+                p.setStockMinimo(rs.getInt("stock_minimo"));
+                p.setEstado(rs.getString("estado"));
+                lista.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al listar críticos: " + e.getMessage());
+        }
+        return lista;
+    }
 }
