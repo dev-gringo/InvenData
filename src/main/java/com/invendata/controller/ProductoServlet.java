@@ -58,6 +58,10 @@ public class ProductoServlet extends HttpServlet {
                 break;
         }
 
+        // Calculamos el total de alertas real para el Dashboard
+        int totalAlertas = pdao.listarCriticos().size();
+        request.setAttribute("totalAlertas", totalAlertas);
+
         // 3. DESPACHO ÚNICO
         // Sea cual sea la lista (buscada, crítica o total), se envía al mismo JSP
         request.setAttribute("productos", lista);
