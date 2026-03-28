@@ -41,25 +41,29 @@
              
             <h2 class="mb-4">📦 Panel de Inventario</h2>
             
-            <div class="row mb-4">
+ <div class="row mb-4">
     <div class="col-md-4">
-        <div class="card bg-light border-danger shadow-sm">
-            <div class="card-body text-center">
-                <h6 class="card-title text-muted">Productos en Alerta</h6>
-                <c:set var="contadorCritico" value="0" />
-                <c:forEach var="p" items="${productos}">
-                    <c:if test="${p.stock <= p.stockMinimo}">
-                        <c:set var="contadorCritico" value="${contadorCritico + 1}" />
-                    </c:if>
-                </c:forEach>
-                <h2 class="display-6 fw-bold ${contadorCritico > 0 ? 'text-danger' : 'text-success'}">
-                    ${contadorCritico}
-                </h2>
-                <small class="text-muted">Por debajo del stock mínimo</small>
+        <a href="ProductoServlet?accion=verCriticos" class="text-decoration-none">
+            <div class="card bg-light border-danger shadow-sm h-100 btn-outline-danger" style="transition: 0.3s; cursor: pointer;">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-muted">Productos en Alerta</h6>
+                    
+                    <c:set var="contadorCritico" value="0" />
+                    <c:forEach var="p" items="${productos}">
+                        <c:if test="${p.stock <= p.stockMinimo}">
+                            <c:set var="contadorCritico" value="${contadorCritico + 1}" />
+                        </c:if>
+                    </c:forEach>
+
+                    <h2 class="display-6 fw-bold ${contadorCritico > 0 ? 'text-danger' : 'text-success'}">
+                        ${contadorCritico}
+                    </h2>
+                    <small class="text-muted">Haz clic para filtrar la lista ↓</small>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
-</div>
+ </div>
 
             <c:if test="${param.error == 'insuficiente'}">
                 <div class="alert alert-danger">❌ Error: Stock insuficiente para realizar la salida.</div>
