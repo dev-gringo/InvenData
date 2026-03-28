@@ -90,5 +90,47 @@ public int obtenerStock(int id) {
     }
     // Si el producto no existe o hay error, devolvemos 0 para evitar salidas
     return 0;
-}
+    }
+
+    /**
+     * 3. Método para ACTUALIZAR un producto (UPDATE)
+     * Modifica los datos básicos sin tocar el stock directamente.
+     */
+    public boolean actualizar(Producto p) {
+        String sql = "UPDATE productos SET nombre=?, categoria=?, precio=?, stock_minimo=? WHERE id=?";
+        try {
+            con = Conexion.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, p.getNombre());
+            ps.setString(2, p.getCategoria());
+            ps.setDouble(3, p.getPrecio());
+            ps.setInt(4, p.getStockMinimo());
+            ps.setInt(5, p.getId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar producto: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 4. Método para ELIMINACIÓN LÓGICA (DELETE lógico)
+     * En lugar de borrar el registro, cambiamos su estado a 'INACTIVO'.
+     * para proteger la integridad referencial del historial de movimientos.
+     */
+    public boolean eliminarLogico(int id) {
+        // No borramos, solo marcamos como oculto
+        String sql = "UPDATE productos SET estado = 'INACTIVO' WHERE id = ?";
+        try {
+            con = Conexion.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al realizar eliminación lógica: " + e.getMessage());
+            return false;
+        }
+    }
 }

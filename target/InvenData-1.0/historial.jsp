@@ -52,7 +52,7 @@
                 </thead>
                 <tbody>
                     <c:forEach var="m" items="${historial}">
-                        <tr>
+                        <tr class="${m.tipo == 'SALIDA' ? 'table-warning' : ''}">
                             <td>
                                <fmt:formatDate value="${m.fecha}" pattern="dd/MM/yyyy - hh:mm:ss a" />
                             </td>
@@ -66,12 +66,6 @@
                             <td>${m.nombreUsuario}</td>
                         </tr>
                     </c:forEach>
-                    
-                    <c:if test="${empty historial}">
-                        <tr>
-                            <td colspan="5" class="text-center text-muted">No se han registrado movimientos todavía.</td>
-                        </tr>
-                    </c:if>
                 </tbody>
             </table>
         </div>
