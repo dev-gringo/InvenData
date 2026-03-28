@@ -76,9 +76,16 @@
              
      <div class="row align-items-center mt-4 mb-2">
     <div class="col-md-3 no-print"></div>
-
+    
     <div class="col-md-6 text-center">
         <h2 class="display-6 fw-bold mb-0">📦 Panel de Inventario</h2>
+        
+        <div class="d-none d-print-block mt-2">
+            <h2>InvenData - Reporte de Inventario</h2>
+            <small class="text-muted">
+                Reporte generado el: <%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date()) %>
+            </small>
+        </div>
     </div>
 
     <div class="col-md-3 text-end no-print">
