@@ -187,7 +187,7 @@
             </td>
             
             <td>
-                <div class="btn-group" role="group">
+    <div class= "d-flex gap-2 justify-content-center">
     <c:choose>
         <%-- ESCENARIO 1: Estamos viendo los productos borrados --%>
         <c:when test="${vista == 'inactivos'}">

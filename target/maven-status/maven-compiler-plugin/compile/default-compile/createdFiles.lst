@@ -4,6 +4,7 @@ com\invendata\dao\ProductoDAO.class
 com\invendata\model\Producto.class
 com\invendata\model\Usuario.class
 com\invendata\controller\LoginServlet.class
+login\css.class
 com\invendata\model\Movimiento.class
 com\invendata\dao\MovimientoDAO.class
 com\invendata\dao\UsuarioDAO.class

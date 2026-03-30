@@ -1,0 +1,132 @@
+/* =========================================
+   ESTILOS PARA INVENDATA - LOGIN
+   ========================================= */
+
+/*  Configuración del Fondo y Centrado */
+body {
+    /* Overlay oscuro + Imagen de fondo */
+    background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), 
+                url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+    
+    /* Centrado absoluto de la tarjeta */
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/*  Contenedor Principal (Efecto Cristal / Glassmorphism) */
+.login-container {
+    background: rgba(255, 255, 255, 0.05); /* Blanco muy transparente */
+    backdrop-filter: blur(12px);          /* Desenfoque del fondo */
+    -webkit-backdrop-filter: blur(12px);   /* Soporte para Safari */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    color: white;
+    width: 100%;
+    max-width: 400px;
+    
+    /* Animación de entrada suave */
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/*  Títulos y Textos */
+.login-container h2 {
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.login-container p {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 2rem;
+}
+
+.login-container .form-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+}
+
+/*  Estilo de los Campos (Inputs) e Iconos */
+.login-container .input-group-text {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: none;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 10px 0 0 10px;
+}
+
+.login-container .form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: none; /* Se une visualmente al icono */
+    color: white;
+    padding: 0.75rem;
+    border-radius: 0 10px 10px 0;
+}
+
+/* Color del texto de ayuda (placeholder) */
+.login-container .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Estado al hacer clic (Focus) */
+.login-container .form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    box-shadow: none;
+}
+
+/*  Botón de Ingreso */
+.login-container .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: none;
+    padding: 0.8rem;
+    font-weight: 700;
+    border-radius: 10px;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.login-container .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+    filter: brightness(1.1);
+}
+
+/*  Alerta de Error Personalizada */
+.login-container .alert-danger {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #ffb3b8;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(5px);
+}
+
+/*  Definición de la Animación de Entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
