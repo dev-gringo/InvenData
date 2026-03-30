@@ -78,7 +78,9 @@
     <div class="col-md-3 no-print"></div>
     
     <div class="col-md-6 text-center">
-        <h2 class="display-6 fw-bold mb-0">📦 Panel de Inventario</h2>
+        <h2 class="display-6 fw-bold mb-0">
+            ${vista == 'inactivos' ? ' Productos Inactivos' : ' Panel de Inventario'}
+        </h2>
         
         <div class="d-none d-print-block mt-2">
             <h2>InvenData - Reporte de Inventario</h2>
@@ -115,7 +117,7 @@
                                <small class="text-danger fw-bold">⚠️ Requieren reposición inmediata</small>
                            </c:when>
                            <c:otherwise>
-                               <small class="text-success">✅ Stock saludable</small>
+                               <small class="text-success"> Stock al dia</small>
                            </c:otherwise>
                        </c:choose>
                    </div>
@@ -146,10 +148,15 @@
     
     <div class="col-md-6 text-end">
         <a href="ProductoServlet?accion=verCriticos" class="btn btn-outline-danger">
-            ⚠️ Ver Stock Crítico
+            ️ Ver Stock Crítico
         </a>
+        
+        <a href="ProductoServlet?accion=verInactivos" class="btn btn-outline-secondary">
+        Ver Inactivos
+        </a>
+        
         <a href="ProductoServlet" class="btn btn-outline-secondary">
-            🔄 Ver Todo
+             Ver Todo
         </a>
     </div>
 </div>       
@@ -166,41 +173,55 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="p" items="${productos}">
-                        <tr>
-                            <td>${p.id}</td>
-                            <td>${p.nombre}</td>
-                            <td>${p.categoria}</td>
-                            <td>$ ${p.precio}</td>
-                            <td>
-                                <span class="badge ${p.stock <= p.stockMinimo ? 'bg-danger' : 'bg-success'}">
-                                    ${p.stock} (Min: ${p.stockMinimo})
-                                </span>
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-warning btn-sm" 
-                                            onclick="prepararMovimiento(${p.id}, '${p.nombre}')" 
-                                            data-bs-toggle="modal" data-bs-target="#modalMovimiento">
-                                        ±
-                                    </button>
-                                    
-                                    <button type="button" class="btn btn-info btn-sm text-white" 
-                                            onclick="llenarModalEditar(${p.id}, '${p.nombre}', '${p.categoria}', ${p.precio}, ${p.stockMinimo})" 
-                                            data-bs-toggle="modal" data-bs-target="#modalProducto">
-                                        ✏️
-                                    </button>
+    <c:forEach var="p" items="${productos}">
+        <tr>
+            <td>${p.id}</td>
+            <td>${p.nombre}</td>
+            <td>${p.categoria}</td>
+            <td>$ ${p.precio}</td>
+            <td>
+                <span class="badge ${p.stock <= p.stockMinimo ? 'bg-danger' : 'bg-success'}">
+                    ${p.stock} (Min: ${p.stockMinimo})
+                </span>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <c:choose>
+                        <%-- ESCENARIO 1: Estamos viendo los productos borrados --%>
+                        <c:when test="${vista == 'inactivos'}">
+                            <a href="ProductoServlet?accion=restaurar&id=${p.id}" 
+                               class="btn btn-success btn-sm d-flex align-items-center"
+                               onclick="return confirm('¿Deseas reactivar este producto?')">
+                                 Restaurar
+                            </a>
+                        </c:when>
 
-                                    <a href="ProductoServlet?accion=eliminar&id=${p.id}" 
-                                       class="btn btn-danger btn-sm" 
-                                       onclick="return confirm('¿Seguro que deseas eliminar este producto?')">
-                                        🗑️
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
+                        <%-- ESCENARIO 2: Vista normal de inventario --%>
+                        <c:otherwise>
+                            <button type="button" class="btn btn-warning btn-sm" 
+                                    onclick="prepararMovimiento(${p.id}, '${p.nombre}')" 
+                                    data-bs-toggle="modal" data-bs-target="#modalMovimiento">
+                                ±
+                            </button>
+                            
+                            <button type="button" class="btn btn-info btn-sm text-white" 
+                                    onclick="llenarModalEditar(${p.id}, '${p.nombre}', '${p.categoria}', ${p.precio}, ${p.stockMinimo})" 
+                                    data-bs-toggle="modal" data-bs-target="#modalProducto">
+                                ✏️
+                            </button>
+
+                            <a href="ProductoServlet?accion=eliminar&id=${p.id}" 
+                               class="btn btn-danger btn-sm" 
+                               onclick="return confirm('¿Seguro que deseas eliminar este producto?')">
+                                🗑️
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </td>
+        </tr>
+    </c:forEach>
+</tbody>
             </table>
         </div>
 

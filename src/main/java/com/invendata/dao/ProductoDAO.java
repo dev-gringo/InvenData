@@ -190,4 +190,37 @@ public int obtenerStock(int id) {
         }
         return lista;
     }
+    
+    // Lista solo los productos que fueron "borrados"
+public List<Producto> listarInactivos() {
+    List<Producto> lista = new ArrayList<>();
+    String sql = "SELECT * FROM productos WHERE estado = 'INACTIVO'";
+    try {
+        con = Conexion.getConnection();
+        ps = con.prepareStatement(sql);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            Producto p = new Producto();
+            p.setId(rs.getInt("id"));
+            p.setNombre(rs.getString("nombre"));
+            p.setCategoria(rs.getString("categoria"));
+            p.setPrecio(rs.getDouble("precio"));
+            p.setStock(rs.getInt("stock"));
+            p.setStockMinimo(rs.getInt("stock_minimo"));
+            lista.add(p);
+        }
+    } catch (SQLException e) { System.err.println(e); }
+    return lista;
+}
+
+// Cambia el estado de INACTIVO a ACTIVO
+public boolean restaurar(int id) {
+    String sql = "UPDATE productos SET estado = 'ACTIVO' WHERE id = ?";
+    try {
+        con = Conexion.getConnection();
+        ps = con.prepareStatement(sql);
+        ps.setInt(1, id);
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) { return false; }
+}
 }

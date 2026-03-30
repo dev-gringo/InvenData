@@ -20,7 +20,6 @@ public class ProductoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // 1. ANTI-CACHÉ Y SEGURIDAD (Se mantiene igual)
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         HttpSession session = request.getSession(false); 
         if (session == null || session.getAttribute("usuarioLogueado") == null) {
@@ -28,11 +27,9 @@ public class ProductoServlet extends HttpServlet {
             return;
         }
 
-        // 2. CAPTURAR ACCIÓN
         String accion = request.getParameter("accion");
         List<Producto> lista;
 
-        // Si no hay acción, por defecto es listar todo
         if (accion == null) {
             accion = "listar";
         }
@@ -46,15 +43,28 @@ public class ProductoServlet extends HttpServlet {
 
             case "buscar":
                 String texto = request.getParameter("txtBusqueda");
-                lista = pdao.buscar(texto); // Usa el método que agregamos al DAO
+                lista = pdao.buscar(texto);
                 break;
 
             case "verCriticos":
-                lista = pdao.listarCriticos(); // Usa el método de stock bajo del DAO
+                lista = pdao.listarCriticos();
                 break;
 
+            // --- NUEVOS CASOS PARA LA PAPELERA ---
+            case "verInactivos":
+                lista = pdao.listarInactivos(); // Método que debes poner en el DAO
+                request.setAttribute("vista", "inactivos"); // Bandera para el JSP
+                break;
+
+            case "restaurar":
+                int idRestaurar = Integer.parseInt(request.getParameter("id"));
+                pdao.restaurar(idRestaurar); // Método que debes poner en el DAO
+                response.sendRedirect("ProductoServlet");
+                return;
+            // -------------------------------------
+
             default:
-                lista = pdao.listar(); // Listado normal (Activos)
+                lista = pdao.listar();
                 break;
         }
 
@@ -63,7 +73,6 @@ public class ProductoServlet extends HttpServlet {
         request.setAttribute("totalAlertas", totalAlertas);
 
         // 3. DESPACHO ÚNICO
-        // Sea cual sea la lista (buscada, crítica o total), se envía al mismo JSP
         request.setAttribute("productos", lista);
         request.getRequestDispatcher("productos.jsp").forward(request, response);
     }
