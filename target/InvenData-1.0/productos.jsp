@@ -1,5 +1,4 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%-- Forzamos que la respuesta y la página usen UTF-8 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %> 
 <!DOCTYPE html>
@@ -10,41 +9,7 @@
         <title>InvenData - Gestión de Inventario</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-        
-     <style>
-    @media print {
-        /* Esconder navbars, botones, modales y el buscador al imprimir */
-        .navbar, .btn, .modal, .row.mb-4, .row.mb-3, .alert, th:last-child, td:last-child {
-            display: none !important;
-        }
-        
-        /* Ajustar la tabla para que ocupe toda la hoja */
-        .container {
-            width: 100% !important;
-            max-width: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        
-        .table {
-            width: 100% !important;
-            border: 1px solid #000 !important;
-        }
-
-        /* Añadir un título que solo se vea al imprimir */
-        .print-header {
-            display: block !important;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    }
-
-    /* Esconder el título de impresión en la pantalla normal */
-    .print-header {
-        display: none;
-    }
-    </style>
-    
+        <link rel="stylesheet" href="css/inventario.css">
     </head>
     <body>
         
@@ -75,166 +40,136 @@
 
         <div class="container">
              
-     <div class="row align-items-center mt-4 mb-2">
-    <div class="col-md-3 no-print"></div>
-    
-    <div class="col-md-6 text-center">
-        <h2 class="display-6 fw-bold mb-0">
-            ${vista == 'inactivos' ? ' Productos Inactivos' : ' Panel de Inventario'}
-        </h2>
-        
-        <div class="d-none d-print-block mt-2">
-            <h2>InvenData - Reporte de Inventario</h2>
-            <small class="text-muted">
-                Reporte generado el: <%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date()) %>
-            </small>
-        </div>
-    </div>
-
-    <div class="col-md-3 text-end no-print">
-        <button onclick="window.print();" class="btn btn-secondary shadow-sm">
-            🖨️ Imprimir Reporte
-        </button>
-    </div>
-    
-    <div class="col-12 mt-2">
-        <hr class="w-25 mx-auto">
-    </div>
-</div>
+            <div class="row align-items-center mt-4 mb-2">
+                <div class="col-md-3 no-print"></div>
+                <div class="col-md-6 text-center">
+                    <h2 class="display-6 fw-bold mb-0">
+                        ${vista == 'inactivos' ? ' Productos Inactivos' : ' Panel de Inventario'}
+                    </h2>
+                    <div class="d-none d-print-block mt-2">
+                        <h2>InvenData - Reporte de Inventario</h2>
+                        <small class="text-muted">
+                            Reporte generado el: <%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date()) %>
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3 text-end no-print">
+                    <button onclick="window.print();" class="btn btn-secondary shadow-sm">
+                        🖨️ Imprimir Reporte
+                    </button>
+                </div>
+                <div class="col-12 mt-2">
+                    <hr class="w-25 mx-auto">
+                </div>
+            </div>
             
-    <div class="row mb-4">
-       <div class="col-md-4">
-           <a href="ProductoServlet?accion=verCriticos" class="text-decoration-none">
-               <div class="card bg-light border-danger shadow-sm h-100 btn-outline-danger" style="transition: 0.3s; cursor: pointer;">
-                   <div class="card-body text-center">
-                       <h6 class="card-title text-muted">Productos en Alerta</h6>
-
-                       <h2 class="display-6 fw-bold ${totalAlertas > 0 ? 'text-danger' : 'text-success'}">
-                           ${totalAlertas}
-                       </h2>
-
-                       <c:choose>
-                           <c:when test="${totalAlertas > 0}">
-                               <small class="text-danger fw-bold">⚠️ Requieren reposición inmediata</small>
-                           </c:when>
-                           <c:otherwise>
-                               <small class="text-success"> Stock al dia</small>
-                           </c:otherwise>
-                       </c:choose>
-                   </div>
-               </div>
-           </a>
-       </div>
-   </div>
+            <div class="row mb-4">
+                <div class="col-md-4">
+                   <a href="ProductoServlet?accion=verCriticos" class="text-decoration-none">
+                       <div class="card bg-light border-danger shadow-sm h-100 btn-outline-danger" style="transition: 0.3s; cursor: pointer;">
+                           <div class="card-body text-center">
+                               <h6 class="card-title text-muted">Productos en Alerta</h6>
+                               <h2 class="display-6 fw-bold ${totalAlertas > 0 ? 'text-danger' : 'text-success'}">
+                                   ${totalAlertas}
+                               </h2>
+                               <c:choose>
+                                   <c:when test="${totalAlertas > 0}">
+                                       <small class="text-danger fw-bold">⚠️ Requieren reposición inmediata</small>
+                                   </c:when>
+                                   <c:otherwise>
+                                       <small class="text-success"> Stock al día</small>
+                                   </c:otherwise>
+                               </c:choose>
+                           </div>
+                       </div>
+                   </a>
+                </div>
+            </div>
 
             <c:if test="${param.error == 'insuficiente'}">
-                <div class="alert alert-danger">❌ Error: Stock insuficiente para realizar la salida.</div>
+                <div class="alert alert-danger shadow-sm">❌ Error: Stock insuficiente para realizar la salida.</div>
             </c:if>
             <c:if test="${param.msj == 'exito'}">
-                <div class="alert alert-success">✅ Movimiento registrado correctamente.</div>
+                <div class="alert alert-success shadow-sm">✅ Movimiento registrado correctamente.</div>
             </c:if>
 
-            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="prepararNuevo()">
-                + Nuevo Producto
-            </button>
-                
- <div class="row mb-3 mt-2">
-    <div class="col-md-6">
-        <form action="ProductoServlet" method="GET" class="d-flex">
-            <input type="hidden" name="accion" value="buscar">
-            <input type="text" name="txtBusqueda" class="form-control me-2" placeholder="Buscar producto por nombre...">
-            <button type="submit" class="btn btn-dark">🔍</button>
-        </form>
-    </div>
-    
-    <div class="col-md-6 text-end">
-        <a href="ProductoServlet?accion=verCriticos" class="btn btn-outline-danger">
-            ️ Ver Stock Crítico
-        </a>
-        
-        <a href="ProductoServlet?accion=verInactivos" class="btn btn-outline-secondary">
-        Ver Inactivos
-        </a>
-        
-        <a href="ProductoServlet" class="btn btn-outline-secondary">
-             Ver Todo
-        </a>
-    </div>
-</div>       
+            <div class="table-container mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0 text-secondary fw-bold">Lista de Productos</h4>
+                    <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="prepararNuevo()">
+                        <i class="bi bi-plus-circle me-1"></i> Nuevo Producto
+                    </button>
+                </div>
 
-            <table class="table table-hover table-bordered shadow-sm">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Categoría</th>
-                        <th>Precio</th>
-                        <th>Stock Actual</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-    <c:forEach var="p" items="${productos}">
-        <tr>
-            <td>${p.id}</td>
-            <td>${p.nombre}</td>
-            <td>${p.categoria}</td>
-            <td>$ ${p.precio}</td>
-            <td>
-                <span class="badge ${p.stock <= p.stockMinimo ? 'bg-danger' : 'bg-success'}">
-                    ${p.stock} (Min: ${p.stockMinimo})
-                </span>
-            </td>
-            
-            <td>
-    <div class= "d-flex gap-2 justify-content-center">
-    <c:choose>
-        <%-- ESCENARIO 1: Estamos viendo los productos borrados --%>
-        <c:when test="${vista == 'inactivos'}">
-            <a href="ProductoServlet?accion=restaurar&id=${p.id}" 
-               class="btn btn-outline-success btn-sm d-flex align-items-center"
-               onclick="return confirm('¿Deseas reactivar este producto?')"
-               title="Restaurar Producto">
-                <i class="bi bi-arrow-counterclockwise me-1"></i> Restaurar
-            </a>
-        </c:when>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <form action="ProductoServlet" method="GET" class="input-group">
+                            <input type="hidden" name="accion" value="buscar">
+                            <input type="text" name="txtBusqueda" class="form-control search-input" placeholder="Buscar producto por nombre...">
+                            <button type="submit" class="btn btn-dark search-btn">🔍 Buscar</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="btn-group shadow-sm">
+                            <a href="ProductoServlet?accion=verCriticos" class="btn btn-outline-danger btn-sm">️ ver stock Crítico</a>
+                            <a href="ProductoServlet?accion=verInactivos" class="btn btn-outline-secondary btn-sm">ver Inactivos</a>
+                            <a href="ProductoServlet" class="btn btn-outline-secondary btn-sm"> Ver Todo</a>
+                        </div>
+                    </div>
+                </div>
 
-        <%-- ESCENARIO 2: Vista normal de inventario --%>
-        <c:otherwise>
-            <%-- Botón Movimiento --%>
-            <button type="button" class="btn btn-outline-warning btn-sm" 
-                    onclick="prepararMovimiento(${p.id}, '${p.nombre}')" 
-                    data-bs-toggle="modal" data-bs-target="#modalMovimiento"
-                    title="Registrar Entrada/Salida">
-                <i class="bi bi-arrow-left-right"></i>
-            </button>
-            
-            <%-- Botón Editar --%>
-            <button type="button" class="btn btn-outline-info btn-sm" 
-                    onclick="llenarModalEditar(${p.id}, '${p.nombre}', '${p.categoria}', ${p.precio}, ${p.stockMinimo})" 
-                    data-bs-toggle="modal" data-bs-target="#modalProducto"
-                    title="Editar detalles">
-                <i class="bi bi-pencil-square"></i>
-            </button>
-
-            <%-- Botón Eliminar --%>
-            <a href="ProductoServlet?accion=eliminar&id=${p.id}" 
-               class="btn btn-outline-danger btn-sm" 
-               onclick="return confirm('¿Seguro que deseas eliminar este producto?')"
-               title="eliminar">
-                <i class="bi bi-trash"></i>
-            </a>
-        </c:otherwise>
-    </c:choose>
-</div>
-            </td>
-        </tr>
-    </c:forEach>
-</tbody>
-            </table>
-        </div>
-
-        <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock Actual</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="p" items="${productos}">
+                                <tr>
+                                    <td class="fw-bold text-muted">#${p.id}</td>
+                                    <td>${p.nombre}</td>
+                                    <td><span class="badge bg-light text-dark border">${p.categoria}</span></td>
+                                    <td>$ ${p.precio}</td>
+                                    <td>
+                                        <span class="badge ${p.stock <= p.stockMinimo ? 'bg-danger' : 'bg-success'} p-2">
+                                            ${p.stock} (Min: ${p.stockMinimo})
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <c:choose>
+                                                <c:when test="${vista == 'inactivos'}">
+                                                    <a href="ProductoServlet?accion=restaurar&id=${p.id}" class="btn btn-outline-success btn-sm" onclick="return confirm('¿Deseas reactivar?')">
+                                                        <i class="bi bi-arrow-counterclockwise"></i> Restaurar
+                                                    </a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <button type="button" class="btn btn-outline-warning btn-sm" onclick="prepararMovimiento(${p.id}, '${p.nombre}')" data-bs-toggle="modal" data-bs-target="#modalMovimiento" title="Movimiento">
+                                                        <i class="bi bi-arrow-left-right"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="llenarModalEditar(${p.id}, '${p.nombre}', '${p.categoria}', ${p.precio}, ${p.stockMinimo})" data-bs-toggle="modal" data-bs-target="#modalProducto" title="Editar">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </button>
+                                                    <a href="ProductoServlet?accion=eliminar&id=${p.id}" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Eliminar?')" title="Eliminar">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div> </div> <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="ProductoServlet" method="POST" accept-charset="UTF-8">
@@ -244,21 +179,16 @@
                         </div>
                         <div class="modal-body">
                             <input type="hidden" name="txtId" id="prod_id">
-                            
                             <label class="form-label">Nombre</label>
                             <input type="text" name="txtNombre" id="prod_nom" class="form-control mb-2" required>
-                            
                             <label class="form-label">Categoría</label>
                             <input type="text" name="txtCategoria" id="prod_cat" class="form-control mb-2" required>
-                            
                             <label class="form-label">Precio</label>
                             <input type="number" step="0.01" name="txtPrecio" id="prod_pre" class="form-control mb-2" required>
-                            
                             <div id="divStock">
                                 <label class="form-label">Stock Inicial</label>
                                 <input type="number" name="txtStock" id="prod_sto" class="form-control mb-2">
                             </div>
-                            
                             <label class="form-label">Stock Mínimo (Alerta)</label>
                             <input type="number" name="txtStockMin" id="prod_min" class="form-control mb-2" required>
                         </div>
@@ -301,7 +231,6 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        
         <script>
             function prepararNuevo() {
                 document.getElementById('tituloModalProd').innerText = "Agregar Nuevo Producto";
@@ -319,7 +248,6 @@
                 document.getElementById('btnAccionProd').innerText = "Actualizar Cambios";
                 document.getElementById('btnAccionProd').className = "btn btn-info text-white w-100";
                 document.getElementById('divStock').style.display = "none"; 
-                
                 document.getElementById('prod_id').value = id;
                 document.getElementById('prod_nom').value = nom;
                 document.getElementById('prod_cat').value = cat;

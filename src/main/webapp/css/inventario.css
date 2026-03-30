@@ -1,0 +1,81 @@
+/* inventario.css */
+
+/* 1. Estilos generales de la página */
+body {
+    background-color: #f8f9fa; /* Un gris muy tenue para que las tarjetas blancas resalten */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* 2. Tarjetas de Indicadores */
+.card-stats {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-stats:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+/* 3. Tabla de Productos */
+.table-container {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.table thead th {
+    background-color: #212529;
+    color: white;
+    border: none;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 15px;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    padding: 12px 15px;
+}
+
+/* 4. Buscador y Botones */
+.search-input {
+    border-radius: 8px 0 0 8px;
+    border: 1px solid #dee2e6;
+}
+
+.search-btn {
+    border-radius: 0 8px 8px 0;
+}
+
+/* 5. Estilos de Impresión (Tus reglas originales optimizadas) */
+@media print {
+    .navbar, .btn, .modal, .no-print, .alert, hr, .input-group {
+        display: none !important;
+    }
+    
+    body { background-color: white; }
+
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .table {
+        width: 100% !important;
+        border: 1px solid #000 !important;
+    }
+
+    .print-header {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+}
+
+.print-header { display: none; }
