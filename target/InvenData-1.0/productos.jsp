@@ -9,6 +9,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>InvenData - Gestión de Inventario</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
         
      <style>
     @media print {
@@ -184,40 +185,48 @@
                     ${p.stock} (Min: ${p.stockMinimo})
                 </span>
             </td>
+            
             <td>
-                <div class="btn-group">
-                    <c:choose>
-                        <%-- ESCENARIO 1: Estamos viendo los productos borrados --%>
-                        <c:when test="${vista == 'inactivos'}">
-                            <a href="ProductoServlet?accion=restaurar&id=${p.id}" 
-                               class="btn btn-success btn-sm d-flex align-items-center"
-                               onclick="return confirm('¿Deseas reactivar este producto?')">
-                                 Restaurar
-                            </a>
-                        </c:when>
+                <div class="btn-group" role="group">
+    <c:choose>
+        <%-- ESCENARIO 1: Estamos viendo los productos borrados --%>
+        <c:when test="${vista == 'inactivos'}">
+            <a href="ProductoServlet?accion=restaurar&id=${p.id}" 
+               class="btn btn-outline-success btn-sm d-flex align-items-center"
+               onclick="return confirm('¿Deseas reactivar este producto?')"
+               title="Restaurar Producto">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Restaurar
+            </a>
+        </c:when>
 
-                        <%-- ESCENARIO 2: Vista normal de inventario --%>
-                        <c:otherwise>
-                            <button type="button" class="btn btn-warning btn-sm" 
-                                    onclick="prepararMovimiento(${p.id}, '${p.nombre}')" 
-                                    data-bs-toggle="modal" data-bs-target="#modalMovimiento">
-                                ±
-                            </button>
-                            
-                            <button type="button" class="btn btn-info btn-sm text-white" 
-                                    onclick="llenarModalEditar(${p.id}, '${p.nombre}', '${p.categoria}', ${p.precio}, ${p.stockMinimo})" 
-                                    data-bs-toggle="modal" data-bs-target="#modalProducto">
-                                ✏️
-                            </button>
+        <%-- ESCENARIO 2: Vista normal de inventario --%>
+        <c:otherwise>
+            <%-- Botón Movimiento --%>
+            <button type="button" class="btn btn-outline-warning btn-sm" 
+                    onclick="prepararMovimiento(${p.id}, '${p.nombre}')" 
+                    data-bs-toggle="modal" data-bs-target="#modalMovimiento"
+                    title="Registrar Entrada/Salida">
+                <i class="bi bi-arrow-left-right"></i>
+            </button>
+            
+            <%-- Botón Editar --%>
+            <button type="button" class="btn btn-outline-info btn-sm" 
+                    onclick="llenarModalEditar(${p.id}, '${p.nombre}', '${p.categoria}', ${p.precio}, ${p.stockMinimo})" 
+                    data-bs-toggle="modal" data-bs-target="#modalProducto"
+                    title="Editar detalles">
+                <i class="bi bi-pencil-square"></i>
+            </button>
 
-                            <a href="ProductoServlet?accion=eliminar&id=${p.id}" 
-                               class="btn btn-danger btn-sm" 
-                               onclick="return confirm('¿Seguro que deseas eliminar este producto?')">
-                                🗑️
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+            <%-- Botón Eliminar --%>
+            <a href="ProductoServlet?accion=eliminar&id=${p.id}" 
+               class="btn btn-outline-danger btn-sm" 
+               onclick="return confirm('¿Seguro que deseas eliminar este producto?')"
+               title="eliminar">
+                <i class="bi bi-trash"></i>
+            </a>
+        </c:otherwise>
+    </c:choose>
+</div>
             </td>
         </tr>
     </c:forEach>
